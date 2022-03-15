@@ -15,7 +15,7 @@ export class StageTenPlayer extends Component<PlayerProps> {
     aspectRatio: 0,
     uri: ''
   }
-  
+
   webviewRef: WebView | null = null
   onMessage: (message: object) => void
 
@@ -46,30 +46,34 @@ export class StageTenPlayer extends Component<PlayerProps> {
   }
 
   render() {
-    return <View
-      style ={this.state.aspectRatio ? {
-        aspectRatio: this.state.aspectRatio,
-        width: '100%',
-        maxHeight: '50%',
-        alignSelf: 'center'
-      } : null}
-    >
-      <WebView
-        ref={(ref) => (this.webviewRef = ref)}
-        source={{ uri: this.state.uri }}
-        onMessage={(event) => this.onMessage(JSON.parse(event.nativeEvent.data))}
-        mediaPlaybackRequiresUserAction={false}
-        allowsInlineMediaPlayback={true}
-        injectedJavaScriptBeforeContentLoaded={`
-          window.addEventListener('message', (event) => {
-            if (event.origin !== '${stageTenOrigin}') {
-              return
-            }
-            window.ReactNativeWebView.postMessage(JSON.stringify(event.data))
-          })
-        `}
-      />
-    </View>
+    return (
+      <View
+        style={
+          this.state.aspectRatio ? {
+            aspectRatio: this.state.aspectRatio,
+            width: '100%',
+            maxHeight: '50%',
+            alignSelf: 'center',
+          } : null
+        }
+      >
+        <WebView
+          ref={(ref) => { this.webviewRef = ref }}
+          source={{ uri: this.state.uri }}
+          onMessage={(event) => this.onMessage(JSON.parse(event.nativeEvent.data))}
+          mediaPlaybackRequiresUserAction={false}
+          allowsInlineMediaPlayback={true}
+          injectedJavaScriptBeforeContentLoaded={`
+            window.addEventListener('message', (event) => {
+              if (event.origin !== '${stageTenOrigin}') {
+                return
+              }
+              window.ReactNativeWebView.postMessage(JSON.stringify(event.data))
+            })
+          `}
+        />
+      </View>
+    )
   }
 }
 

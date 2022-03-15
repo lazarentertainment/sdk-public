@@ -53,11 +53,13 @@ class MyApp extends Component {
   }
 
   render() {
-    return <StageTenPlayer
-      uri={playerUri}
-      onMessage={this.onMessage}
-      ref={(ref) => this.playerRef = ref}
-    />
+    return (
+      <StageTenPlayer
+        uri={playerUri}
+        onMessage={this.onMessage}
+        ref={(ref) => this.playerRef = ref}
+      />
+    )
   }
 }
 ```

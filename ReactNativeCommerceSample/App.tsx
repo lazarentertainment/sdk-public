@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   },
   column: {
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   chatInputRow: {
     flexDirection: 'row',
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 16,
     marginTop: 8,
-    marginBottom: 8
+    marginBottom: 8,
   },
   image: {
     width: 100,
@@ -69,7 +69,7 @@ function ChatScreen({
           value={chatInputValue}
           onChangeText={setChatInputValue}
         />
-        <Button 
+        <Button
           title='Send Chat'
           onPress={() => {
             onSendChatClick(chatInputValue)
@@ -87,7 +87,7 @@ function ChatScreen({
           value={chatUsernameValue}
           onChangeText={setChatUsernameValue}
         />
-        <Button 
+        <Button
           title='Join Chat'
           onPress={() => {
             onJoinChatClick(chatUsernameValue)
@@ -100,7 +100,7 @@ function ChatScreen({
   return (
     <>
       {chatInputs}
-      <InvertedFlatList 
+      <InvertedFlatList
         style={styles.logList}
         data={logMessages}
         renderItem={({item}) => <LogItem text={item} />}
@@ -112,32 +112,36 @@ function ChatScreen({
 function CommerceScreen({
   logMessages,
   saleActive,
-  saleProducts
+  saleProducts,
 }) {
   let productsView = null
   if (saleProducts) {
     productsView = <FlatList
       data={saleProducts}
       renderItem={({item}) => {
-        return <Image
-          style={styles.image}
-          source={{
-            uri: item.images?.edges[0]?.node.originalSrc
-          }}
-        />
+        return (
+          <Image
+            style={styles.image}
+            source={{
+              uri: item.images?.edges[0]?.node.originalSrc,
+            }}
+          />
+        )
       }}
       extraData={saleProducts}
       horizontal={true}
     />
   }
-  return <>
-    {productsView}
-    <InvertedFlatList 
+  return (
+    <>
+      {productsView}
+      <InvertedFlatList
         style={styles.logList}
         data={logMessages}
         renderItem={({item}) => <LogItem text={item} />}
       />
-  </>
+    </>
+  )
 }
 
 function VotingScreen({
@@ -147,27 +151,31 @@ function VotingScreen({
 }) {
   let answerButtons;
   if (activeQuestion != null) {
-    answerButtons = <View style={{ padding: 10 }}>
-      {
-        activeQuestion.answers.map((answer: any, index: number) => {
-          return <View 
-            style={index ? { marginTop: 10 } : {}}
-            key={answer.id}
-            >
-            <Button
-              title={answer.text}
-              onPress={() => onVote(answer)}
-            />
-          </View>
-        })
-      }
-    </View>
+    answerButtons = (
+      <View style={{ padding: 10 }}>
+        {
+          activeQuestion.answers.map((answer: any, index: number) => {
+            return (
+              <View
+                style={index ? { marginTop: 10 } : {}}
+                key={answer.id}
+              >
+                <Button
+                  title={answer.text}
+                  onPress={() => onVote(answer)}
+                />
+              </View>
+            )
+          })
+        }
+      </View>
+    )
   }
 
   return (
     <>
       {answerButtons}
-      <InvertedFlatList 
+      <InvertedFlatList
         style={styles.logList}
         data={logMessages}
         renderItem={({item}) => <LogItem text={item} />}
@@ -182,7 +190,7 @@ function InvertedFlatList({
   renderItem,
 }) {
   return (
-    <FlatList 
+    <FlatList
       style={style}
       data={[...data].reverse()}
       renderItem={renderItem}
@@ -256,8 +264,8 @@ export default class App extends Component {
           voting: {
             ...state.voting,
             activeQuestion: data.payload.activeQuestion,
-            log: [...state.voting.log, `received message: ${prettyPrint(data)}`]
-          }
+            log: [...state.voting.log, `received message: ${prettyPrint(data)}`],
+          },
         };
       });
     }
@@ -268,8 +276,8 @@ export default class App extends Component {
           chat: {
             ...state.chat,
             messages: data.payload.messages,
-            log: [...state.chat.log, `received message: ${prettyPrint(data)}`]
-          }
+            log: [...state.chat.log, `received message: ${prettyPrint(data)}`],
+          },
         };
       });
     }
@@ -280,8 +288,8 @@ export default class App extends Component {
           commerce: {
             ...state.commerce,
             saleProducts: data.payload.saleProducts,
-            log: [...state.commerce.log, `received message: ${prettyPrint(data)}`]
-          }
+            log: [...state.commerce.log, `received message: ${prettyPrint(data)}`],
+          },
         }
       })
     }
@@ -292,8 +300,8 @@ export default class App extends Component {
           commerce: {
             ...state.commerce,
             saleActive: data.payload.saleActive,
-            log: [...state.commerce.log, `received message: ${prettyPrint(data)}`]
-          }
+            log: [...state.commerce.log, `received message: ${prettyPrint(data)}`],
+          },
         }
       })
     }
@@ -310,9 +318,9 @@ export default class App extends Component {
       return {
         chat: {
           ...state.chat,
-          log: [...state.chat.log, `sent message: ${prettyPrint(action)}`]
+          log: [...state.chat.log, `sent message: ${prettyPrint(action)}`],
         },
-        userHasJoinedChat: true
+        userHasJoinedChat: true,
       }
     })
   }
@@ -321,15 +329,15 @@ export default class App extends Component {
     console.log(`Sending chat message: ${message}`)
     const action = {
       action: 'chat_sendmessage',
-      payload: { message }
+      payload: { message },
     }
     this.sendAction(action)
     this.setState((state: any) => {
       return {
         chat: {
           ...state.chat,
-          log: [...state.chat.log, `sent message: ${prettyPrint(action)}`]
-        }
+          log: [...state.chat.log, `sent message: ${prettyPrint(action)}`],
+        },
       }
     })
   }
@@ -339,45 +347,51 @@ export default class App extends Component {
     const action = {
       action: 'vote',
       payload: {
-        answerId: answer.id
-      }
+        answerId: answer.id,
+      },
     }
     this.sendAction(action)
     this.setState((state: any) => {
       return {
         voting: {
           ...state.voting,
-          log: [...state.voting.log, `sent message: ${prettyPrint(action)}`]
-        }
+          log: [...state.voting.log, `sent message: ${prettyPrint(action)}`],
+        },
       }
     })
   }
 
   render() {
     const ChatComponent = () => {
-      return <ChatScreen 
-        logMessages={this.state.chat.log}
-        messages={this.state.chat.messages}
-        userHasJoinedChat={this.state.userHasJoinedChat}
-        onSendChatClick={this.onSendChat}
-        onJoinChatClick={this.onSetUsername}
-      />
+      return (
+        <ChatScreen
+          logMessages={this.state.chat.log}
+          messages={this.state.chat.messages}
+          userHasJoinedChat={this.state.userHasJoinedChat}
+          onSendChatClick={this.onSendChat}
+          onJoinChatClick={this.onSetUsername}
+        />
+      )
     }
-    
+
     const CommerceComponent = () => {
-      return <CommerceScreen
-        logMessages={this.state.commerce.log}
-        saleActive={this.state.commerce.saleActive}
-        saleProducts={this.state.commerce.saleProducts}
-      />
+      return (
+        <CommerceScreen
+          logMessages={this.state.commerce.log}
+          saleActive={this.state.commerce.saleActive}
+          saleProducts={this.state.commerce.saleProducts}
+        />
+      )
     }
-      
+
     const VoteComponent = () => {
-      return <VotingScreen 
-        logMessages={this.state.voting.log}
-        activeQuestion={this.state.voting.activeQuestion}
-        onVote={this.onVote}
-      />
+      return (
+        <VotingScreen
+          logMessages={this.state.voting.log}
+          activeQuestion={this.state.voting.activeQuestion}
+          onVote={this.onVote}
+        />
+      )
     }
 
     let votingTabBadge = null;
@@ -392,18 +406,18 @@ export default class App extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-        <StageTenPlayer 
+        <StageTenPlayer
           uri={playerUri}
           onMessage={this.onMessage}
-          ref={(ref) => this.playerRef = ref}
+          ref={(ref) => { this.playerRef = ref }}
         />
-        
+
         <NavigationContainer>
           <Tab.Navigator
             screenOptions={({route}) => ({
               tabBarLabelPosition: 'beside-icon',
               headerShown: false,
-              tabBarIcon: ({ focused, color, size }) => {
+              tabBarIcon: ({ color, size }) => {
                 let iconName
 
                 if (route.name === 'Chat') {
@@ -427,7 +441,7 @@ export default class App extends Component {
             <Tab.Screen
               name='Voting'
               component={VoteComponent}
-              options={{ tabBarBadge: votingTabBadge }} 
+              options={{ tabBarBadge: votingTabBadge }}
             />
           </Tab.Navigator>
         </NavigationContainer>
